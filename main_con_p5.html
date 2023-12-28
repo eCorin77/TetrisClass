@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetris JS</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+</head>
+<body>
+    <script src="Tablero.js"></script>
+    <script src="Tetrimino.js"></script>
+    
+    <script>
+        
+        const margenTablero = 20;
+        let regulador_vel_teclas = 0;
+        var velocidad = 400;
+        let countVel = 0;
+        let intervalo = null;
+        //setup y draw son funciones de p5.js
+        // setup() se ejecuta una vez al comienzo del programa,
+        
+       
+
+    function descender(){
+        clearInterval(intervalo); // Limpiar el intervalo existente
+        intervalo = setInterval(() => { // Crear un nuevo intervalo con la velocidad actual
+         tetrimino.moverAbajo();
+         countVel++;
+        //    if (countVel >= 50) {
+        //        velocidad = velocidad / 1.2;
+        //           countVel = 0;
+        //        descender(); // Volver a ejecutar con la nueva velocidad
+        //      }
+        }, velocidad);
+    }
+
+        function setup(){
+            createCanvas(900, 600)
+            tablero = new Tablero();  //sin let para que sea global
+            crearMapeoBaseTetriminos();
+            tetrimino = new Tetrimino(); //sin let para que sea global
+            resizeCanvas(tablero.ancho + margenTablero,
+                         tablero.alto + margenTablero + tablero.lado_celda);
+        }
+
+        
+
+        function draw(){    //draw() se ejecuta continuamente en un bucle después de setup()
+                            // (aproximadamente 60 veces por segundo por defecto) para crear la animación.
+            background("grey")
+            tablero.dibujar();   //llamamos al metodo dibujar del objeto tablero
+            tetrimino.dibujar();
+            keyEventsTetris();
+        }
+
+        function keyEventsTetris(){
+            if(millis() - regulador_vel_teclas < 70){
+                return
+            }
+            regulador_vel_teclas = millis(); //millis es p5.js, retorna en ms desde que corre  
+            if(keyIsDown(RIGHT_ARROW)){
+                tetrimino.moverDerecha();
+            }
+            if(keyIsDown(LEFT_ARROW)){
+                tetrimino.moverIzquierda();
+            }
+            if(keyIsDown(DOWN_ARROW)){
+                tetrimino.moverAbajo();
+            }
+            if(keyIsDown(32)){
+                tetrimino.girar();
+            }
+        }
+
+      
+         descender();
+     
+    </script>
+</body>
+</html>

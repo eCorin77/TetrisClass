@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetris JS</title>
+    <style>
+        
+        canvas {
+            position: absolute;
+            left: 300px;
+            border: 2px solid black;
+            background-color: lightgreen;
+        }
+    </style>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script> -->
+</head>
+<body>
+    <canvas id="tetrisCanvas"></canvas>
+    <script>
+        //setu y draw son funciones de p5.js
+        // function setup(){
+        //     createCanvas(900, 600)
+        //     tablero = new Tablero();  //sin let para que sea global
+        // }
+
+        // function draw(){
+        //     background("black")
+        // }
+
+        class Tablero {
+            constructor(_ctx, _filas, _columnas, _lado_celda) {
+                this.ctx = _ctx;
+                this.filas = _filas;
+                this.columnas = _columnas;
+                this.lado_celda = _lado_celda;
+                this.ancho = this.columnas * this.lado_celda;
+                this.alto = this.filas * this.lado_celda;
+                this.posicion = { x: 0, y: 0 };
+            }
+
+            coordenada(x, y) {
+                return { x: x * this.lado_celda + this.posicion.x, y: y * this.lado_celda + this.posicion.y };
+            }
+
+            dibujarTablero() {
+                for (let columna = 0; columna < this.columnas; columna++) {
+                    for (let fila = 0; fila < this.filas; fila++) {
+                        const c = this.coordenada(columna, fila);
+                        this.ctx.fillStyle = 'white';
+                        this.ctx.fillRect(c.x, c.y, this.lado_celda, this.lado_celda);
+                        this.ctx.strokeStyle = 'black';
+                        this.ctx.strokeRect(c.x, c.y, this.lado_celda, this.lado_celda);
+                    }
+                }
+            }
+        }
+
+        const canvas = document.getElementById('tetrisCanvas');
+        const ctx = canvas.getContext('2d');
+        const filas = 20;
+        const columnas = 10;
+        const lado_celda = 30;
+        
+        canvas.width = columnas * lado_celda;
+        canvas.height = filas * lado_celda;
+
+        const tablero = new Tablero(ctx, filas, columnas, lado_celda);
+
+        function dibujar() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            tablero.dibujarTablero();
+            // Otros elementos a dibujar en el juego Tetris
+        }
+
+        function init() {
+            setInterval(dibujar, 1000 / 30); // Llamar a la función dibujar cada 1/30 de segundo
+        }
+
+        init();
+    </script>
+</body>
+</html>
